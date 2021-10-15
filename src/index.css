@@ -1,0 +1,100 @@
+.img-player-icon {
+  display: inline-block;
+  max-width: 50px;
+  height: 25px;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+#rad-heading {
+  float:  left;
+}
+
+#dire-heading {
+  float:  right;
+}
+
+#team-headings {
+  clear: both;
+}
+.match-box {
+  border: 1px solid #bbb;
+}
+
+.player-name {
+  font:  calibre;
+  font-size:  15px;
+}
+
+.item-preview-icon.p-0.m-0 {
+  max-width: 33%;
+}
+
+.score-preview {
+  font:  "Times New Roman";
+}
+
+.duration-preview {
+  font:  "calibre";
+}
+
+.mmr-spec {display:block;
+  float:right;}
+
+.live-portrait 
+{
+ background: rgb(1,43,26);
+background: linear-gradient(90deg, rgba(1,43,26,0.16288522244835435) 35%, rgba(38,0,3,0.13767513841474088) 65%); }
+
+.background-main {
+ 
+ background: rgb(23,23,23);
+background: linear-gradient(90deg, rgba(23,23,23,0.9415967070421919) 0%, rgba(74,73,73,1) 100%); 
+}
+h5 {
+  color: white;
+}
+
+h6 {
+  color: white;
+}
+
+#root {
+    width: 100%;
+    height: 100vh;
+    min-height: 100%;
+    background: #212529;
+    display: block;
+}
+
+.player-name:hover {
+  color: cyan;
+}
+
+
+.player-name-link {
+  textDecoration: none;
+  color:white;
+}
+
+.fill {
+  min-height: 20vh;
+
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif !important;
+}  
