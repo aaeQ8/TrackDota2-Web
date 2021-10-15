@@ -94,7 +94,7 @@ class PlayerItem extends React.Component {
       for (var i = 0; i < this.props.sig_heroes.length; i++) {
         cols.push(
           <img
-            alt="hero"
+            alt=""
             key={this.props.sig_heroes[i]}
             src={
               "https://d2zromn1qdgyf0.cloudfront.net/heroes_mini_icons/" +

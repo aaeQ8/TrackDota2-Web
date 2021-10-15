@@ -184,20 +184,22 @@ class LiveMatchRow extends React.Component {
 
 class LiveHeroPreviewIcon extends React.Component {
   render() {
+    var img_src;
+    if (this.props.player["hero_id"] !== 0) {
+      img_src =
+        "https://d2zromn1qdgyf0.cloudfront.net/heroes_icons/" +
+        this.props.player["hero_id"] +
+        ".png";
+    } else {
+      img_src = process.env.PUBLIC_URL + "/question-mark.png";
+    }
+
     return (
       <figure
         style={{ color: "white" }}
         className="d-none d-lg-block text-center col-sm-1"
       >
-        <img
-          alt={this.props.player["hero_name"]}
-          className="img-fluid"
-          src={
-            "https://d2zromn1qdgyf0.cloudfront.net/heroes_icons/" +
-            this.props.player["hero_id"] +
-            ".png"
-          }
-        />
+        <img alt="" className="img-fluid" src={img_src} />
       </figure>
     );
   }
@@ -212,7 +214,7 @@ class LivePlayerNamesView extends React.Component {
           names.push(
             <span key={this.props.players[i]["account_id"]}>
               <img
-                alt="hero"
+                alt=" "
                 src={
                   "https://d2zromn1qdgyf0.cloudfront.net/heroes_mini_icons/" +
                   this.props.players[i]["hero_id"] +

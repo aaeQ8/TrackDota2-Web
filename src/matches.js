@@ -375,7 +375,7 @@ class HeroPreviewIcon extends React.Component {
         className="d-none d-lg-block text-center col-sm-1"
       >
         <img
-          alt={this.props.player["player_details"]["player_name"]}
+          alt=""
           className="img-fluid"
           src={
             "https://d2zromn1qdgyf0.cloudfront.net/heroes_icons/" +

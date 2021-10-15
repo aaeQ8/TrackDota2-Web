@@ -24,9 +24,7 @@ class TopNavBar extends React.Component {
     return (
       <Router forceRefresh={true}>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <Link className="navbar-brand" to="/">
-            trackdota2
-          </Link>
+          <h1 className="navbar-brand">trackdota2</h1>
           <button
             className="navbar-toggler"
             type="button"
@@ -75,6 +73,7 @@ class TopNavBar extends React.Component {
             <LiveMatchesList />
           </Route>
           <Route path="/"></Route>
+          <LiveMatchesList />
         </Switch>
       </Router>
     );
