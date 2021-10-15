@@ -73,7 +73,6 @@ class TopNavBar extends React.Component {
             <LiveMatchesList />
           </Route>
           <Route path="/"></Route>
-          <LiveMatchesList />
         </Switch>
       </Router>
     );
