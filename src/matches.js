@@ -1,10 +1,10 @@
 import React from "react";
-import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FilterBar } from "./filters.js";
 import { LoadingMatches, NoMoreGames } from "./status.js";
+import "./index.css";
 
 export class Matches extends React.Component {
   constructor(props) {
@@ -41,7 +41,7 @@ export class Matches extends React.Component {
 
   fetchLinkedMatches() {
     fetch(
-      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/dev/linked"
+      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/linked"
     )
       .then((response) => response.json())
       .then((data) => {
@@ -65,7 +65,7 @@ export class Matches extends React.Component {
     if (this.state.last_key !== null && this.state.fetch_more === true) {
       var last_key = "?last_key=" + this.state.last_key;
       fetch(
-        "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/dev/linked" +
+        "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/linked" +
           last_key
       )
         .then((response) => response.json())
@@ -104,7 +104,7 @@ export class Matches extends React.Component {
 
   fetchRecentPlayerMatches() {
     fetch(
-      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/dev/player?player_id=" +
+      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/player?player_id=" +
         this.props.player_id
     )
       .then((response) => response.json())
@@ -125,7 +125,7 @@ export class Matches extends React.Component {
     if (this.state.last_key !== null && this.state.fetch_more === true) {
       var last_key = "&last_key=" + this.state.last_key;
       fetch(
-        "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/dev/player?player_id=" +
+        "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/player?player_id=" +
           this.props.player_id +
           last_key
       )
@@ -174,9 +174,9 @@ export class Matches extends React.Component {
         this.state.items_org.forEach((element) => {
           element.players.forEach((player) => {
             if (
-              search_words
+              player.player_details.player_name
                 .toLowerCase()
-                .includes(player.player_details.player_name.toLowerCase())
+                .startsWith(search_words.toLowerCase())
             ) {
               searched_items.push(element);
             }
@@ -212,7 +212,7 @@ export class Matches extends React.Component {
       last_key = "?date=" + this.state.date;
     }
     fetch(
-      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/dev/recent_matches" +
+      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/recent_matches" +
         last_key
     )
       .then((response) => response.json())
@@ -410,7 +410,7 @@ class ItemsPreviewList extends React.Component {
         if (this.props.items[i] !== 0)
           cols.push(
             <img
-              alt="item"
+              alt=""
               key={i}
               className="img-fluid item-preview-icon p-0 m-0"
               src={

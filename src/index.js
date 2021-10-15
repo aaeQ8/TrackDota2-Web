@@ -24,7 +24,9 @@ class TopNavBar extends React.Component {
     return (
       <Router forceRefresh={true}>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <h1 className="navbar-brand">trackdota2</h1>
+          <Link className="navbar-brand" to="/">
+            trackdota2
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -45,10 +47,10 @@ class TopNavBar extends React.Component {
           >
             <div className="navbar-nav">
               <Link className="nav-item nav-link active" to="/live">
-                Live games
+                Live
               </Link>
               <Link className="nav-item nav-link active" to="/recent">
-                Recent Matches
+                Recent
               </Link>
               <Link className="nav-item nav-link active" to="/players">
                 Players
@@ -72,7 +74,9 @@ class TopNavBar extends React.Component {
           <Route path="/live">
             <LiveMatchesList />
           </Route>
-          <Route path="/"></Route>
+          <Route path="/">
+            <MainView />
+          </Route>
         </Switch>
       </Router>
     );
@@ -84,6 +88,34 @@ class MainApp extends React.Component {
     return (
       <div className="bg-dark container-fluid">
         <TopNavBar />
+        <hr />
+      </div>
+    );
+  }
+}
+
+class MainView extends React.Component {
+  render() {
+    return (
+      <div className="container">
+        <hr />
+        <p className="container" style={{ color: "white" }}>
+          <span style={{ color: "orange" }}>Live</span> - This fetches
+          Live matches from opendota and very recently completed games but some
+          games are misclassifed as live due to a bug
+        </p>
+        <p className="container" style={{ color: "white" }}>
+          <span style={{ color: "orange" }}>Recent</span> - This fetches
+          recently completed and processed matches
+        </p>
+        <p className="container" style={{ color: "white" }}>
+          <span style={{ color: "orange" }}>Players</span> - This is
+          a list of players being tracked (pro players in general)
+        </p>
+        <p className="container" style={{ color: "white" }}>
+          <span style={{ color: "orange" }}>Linked matches</span> - This is
+          a list of matches that were found on youtube
+        </p>
       </div>
     );
   }
