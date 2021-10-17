@@ -15,15 +15,8 @@ export class Matches extends React.Component {
       items_org: null,
       last_key: null,
       fetch_more: true,
-      sort_val: "activate_time_id",
-      search_words: "",
       max_items: 500,
     };
-
-    this.sortItems = this.sortItems.bind(this);
-    this.searchItems = this.searchItems.bind(this);
-    this.updateSearch = this.updateSearch.bind(this);
-    this.updateSortval = this.updateSortval.bind(this);
   }
 
   componentDidMount() {
@@ -55,9 +48,6 @@ export class Matches extends React.Component {
         else {
           this.setState({ fetch_more: false });
         }
-      })
-      .then(() => {
-        this.sortItems(this.state.sort_val);
       });
   }
 
@@ -94,10 +84,6 @@ export class Matches extends React.Component {
             this.setState({ last_key: null });
             this.setState({ fetch_more: false });
           }
-        })
-        .then(() => {
-          this.sortItems(this.state.sort_val);
-          //this.searchItems(this.state.search_words);
         });
     }
   }
@@ -117,8 +103,7 @@ export class Matches extends React.Component {
         else {
           this.setState({ fetch_more: false });
         }
-      })
-      .then(() => this.sortItems(this.state.sort_val));
+      });
   }
 
   fetchMoreRecentPlayerMatches() {
@@ -153,51 +138,7 @@ export class Matches extends React.Component {
             this.setState({ last_key: null });
             this.setState({ fetch_more: false });
           }
-        })
-        .then(() => this.sortItems(this.state.sort_val));
-    }
-  }
-
-  updateSortval(sort_val) {
-    this.setState({ sort_val: sort_val });
-  }
-
-  searchItems(search_words) {
-    if (this.state.items_org !== null) {
-      if (search_words === "") {
-        this.setState({ items: this.state.items_org });
-        if (this.state.max_items >= this.state.items_org.length)
-          this.setState({ fetch_more: true });
-      } else {
-        var searched_items = [];
-        this.setState({ fetch_more: false });
-        this.state.items_org.forEach((element) => {
-          element.players.forEach((player) => {
-            if (
-              player.player_details.player_name
-                .toLowerCase()
-                .startsWith(search_words.toLowerCase())
-            ) {
-              searched_items.push(element);
-            }
-          });
         });
-        this.setState({ items: [...searched_items] });
-      }
-    }
-  }
-
-  updateSearch(search_words) {
-    this.setState({ search_words: search_words });
-  }
-
-  sortItems(sort_val) {
-    function mycomparator(a, b) {
-      return a[sort_val] < b[sort_val] ? 1 : -1;
-    }
-
-    if (this.state.items !== null) {
-      this.setState({ items: [...this.state.items].sort(mycomparator) });
     }
   }
 
@@ -242,8 +183,7 @@ export class Matches extends React.Component {
           date.setDate(date.getDate() - 1);
           this.setState({ date: date.toISOString().split("T")[0] });
         }
-      })
-      .then(() => this.sortItems(this.state.sort_val));
+      });
   }
 
   renderMatchItems() {
@@ -273,11 +213,11 @@ export class Matches extends React.Component {
             <h1 style={{ color: "orange" }}> {this.props.header} </h1>
             <hr />
             <FilterBar
-              updateSearch={this.updateSearch}
-              searchItems={this.searchItems}
-              sortItems={this.sortItems}
-              sort_val={this.state.sort_val}
-              updateSortval={this.updateSortval}
+              items_org={this.state.items_org}
+              updateItems={(new_items, fetch_more) => {
+                this.setState({ fetch_more: fetch_more });
+                this.setState({ items: new_items });
+              }}
             />
             <hr />
             <InfiniteScroll

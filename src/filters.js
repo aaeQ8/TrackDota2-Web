@@ -3,28 +3,87 @@ import React from "react";
 export class FilterBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { search_words: "" };
+    this.state = { search_words: "", sort_val: "activate_time_id" };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSelect(event) {
-    console.log(this.props.sortItems);
-    this.props.sortItems(event.target.value);
-    this.props.updateSortval(event.target.value);
+    this.setState({ sort_val: event.target.value });
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      var new_items = this.filterItems(
+        this.state.search_words,
+        event.target.value
+      );
+      var fetch_more;
+      if (this.state.search_words === "") fetch_more = true;
+      else fetch_more = false;
+      this.props.updateItems(new_items, fetch_more);
+    }
   }
 
   handleChange(event) {
     this.setState({ search_words: event.target.value });
-    if (event.target.value === "") {
-      this.props.searchItems(event.target.value);
-      this.props.updateSearch(event.target.value);
+    if (
+      event.target.value === "" &&
+      this.props.items_org !== null &&
+      this.props.items_org !== undefined
+    ) {
+      var new_items = this.filterItems(
+        event.target.value,
+        this.state.sort_val
+      );
+      this.props.updateItems(new_items, true);
     }
   }
   handleSubmit(event) {
-    this.props.searchItems(this.state.search_words);
-    this.props.updateSearch(this.state.search_words);
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      var new_items = this.filterItems(
+        this.state.search_words,
+        this.state.sort_val
+      );
+      console.log(new_items);
+      var fetch_more;
+      if (this.state.search_words === "") fetch_more = true;
+      else fetch_more = false;
+      this.props.updateItems(new_items, fetch_more);
+    }
+  }
+
+  _search(search_words) {
+    var items = [];
+    if (search_words === "") {
+      items = [...this.props.items_org];
+    } else {
+      this.props.items_org.forEach((element) => {
+        element.players.forEach((player) => {
+          if (
+            player.player_details.player_name
+              .toLowerCase()
+              .startsWith(search_words.toLowerCase())
+          ) {
+            items.push(element);
+          }
+        });
+      });
+    }
+    return items;
+  }
+
+  _sortItems(items, sort_val) {
+    function mycomparator(a, b) {
+      return a[sort_val] < b[sort_val] ? 1 : -1;
+    }
+
+    return [...items].sort(mycomparator);
+  }
+
+  filterItems(search_words, sort_val) {
+    var items;
+    items = this._search(search_words);
+    items = this._sortItems(items, sort_val);
+    return items;
   }
 
   render() {
@@ -32,6 +91,7 @@ export class FilterBar extends React.Component {
       <div className="row">
         <div className="col">
           <input
+            value={this.state.search_words}
             type="text"
             placeholder="Search for a player"
             onChange={this.handleChange}
@@ -46,7 +106,7 @@ export class FilterBar extends React.Component {
         </div>
         <div className="col-auto">
           <select
-            value={this.props.sort_val}
+            value={this.state.sort_val}
             onChange={this.handleSelect}
             style={{ color: "white" }}
             className="form-select bg-secondary"
