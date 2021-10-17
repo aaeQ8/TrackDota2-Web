@@ -8,6 +8,24 @@ export class FilterBar extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.items_org !== null &&
+      this.props.items_org !== undefined &&
+      prevProps.items_org !== this.props.items_org
+    ) {
+      var new_items = this.filterItems(
+        this.state.search_words,
+        this.state.sort_val
+      );
+      var fetch_more;
+      if (this.state.search_words === "") fetch_more = true;
+      else fetch_more = false;
+
+      this.props.updateItems(new_items, fetch_more);
+    }
+  }
 
   handleSelect(event) {
     this.setState({ sort_val: event.target.value });
@@ -30,10 +48,7 @@ export class FilterBar extends React.Component {
       this.props.items_org !== null &&
       this.props.items_org !== undefined
     ) {
-      var new_items = this.filterItems(
-        event.target.value,
-        this.state.sort_val
-      );
+      var new_items = this.filterItems(event.target.value, this.state.sort_val);
       this.props.updateItems(new_items, true);
     }
   }
