@@ -352,7 +352,9 @@ class ItemsPreviewList extends React.Component {
             <img
               alt=""
               key={i}
-              className="img-fluid item-preview-icon p-0 m-0"
+              style={{maxHeight: " 28px",
+                maxWidth: "28px"}}
+              className="d-none d-xl-block img-fluid p-0 m-0"
               src={
                 "https://d2zromn1qdgyf0.cloudfront.net/items_icons/" +
                 this.props.items[i] +
