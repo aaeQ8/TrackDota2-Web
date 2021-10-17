@@ -75,47 +75,133 @@ export class FilterBarLive extends React.Component {
     this.handleShowSelect = this.handleShowSelect.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    console.log("called", this.props.items_org);
+    if (
+      this.props.items_org !== null &&
+      this.props.items_org !== undefined &&
+      prevProps.items_org !== this.props.items_org
+    ) {
+      var new_items = this.filterItems(
+        this.props.items_org,
+        this.state.search_words,
+        this.state.show_val,
+        this.state.sort_val
+      );
+      this.props.updateItems(new_items);
+    }
+  }
+
+  _search(items_org, search_words) {
+    var items = [];
+    if (search_words === "") {
+      items = [...items_org];
+    } else {
+      items_org.forEach((element) => {
+        element.players.forEach((player) => {
+          if ("name" in player)
+            if (
+              player.name.toLowerCase().startsWith(search_words.toLowerCase())
+            ) {
+              items.push(element);
+            }
+        });
+      });
+    }
+    return items;
+  }
+
+  _sortItems(items, sort_val) {
+    function mycomparator(a, b) {
+      return a[sort_val] < b[sort_val] ? 1 : -1;
+    }
+
+    return [...items].sort(mycomparator);
+  }
+
+  _showItems(items, show_val) {
+    var items_to_show = [];
+    if (show_val === "all") items_to_show = [...items];
+    else if (show_val === "live") {
+      items.forEach((element) => {
+        if (element.deactivate_time === 0) items_to_show.push(element);
+      });
+    } else if (show_val === "complete") {
+      items.forEach((element) => {
+        if (element.deactivate_time !== 0) items_to_show.push(element);
+      });
+    }
+    return items_to_show;
+  }
+
+  filterItems(items_org, search_words, show_val, sort_val) {
+    var items;
+    items = this._search(this.props.items_org, search_words);
+    items = this._showItems(items, show_val);
+    items = this._sortItems(items, sort_val);
+    return items;
+  }
+
   handleSortSelect(event) {
     this.setState({ sort_val: event.target.value });
-    this.props.update(
-      this.state.search_words,
-      this.state.show_val,
-      event.target.value
-    );
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      var new_items = this.filterItems(
+        this.props.items_org,
+        this.state.search_words,
+        this.state.show_val,
+        event.target.value
+      );
+
+      this.props.updateItems(new_items);
+    }
   }
 
   handleShowSelect(event) {
     this.setState({ show_val: event.target.value });
-    this.props.update(
-      this.state.search_words,
-      event.target.value,
-      this.state.sort_val
-    );
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      var new_items = this.filterItems(
+        this.props.items_org,
+        this.state.search_words,
+        event.target.value,
+        this.state.sort_val
+      );
+      this.props.updateItems(new_items);
+    }
   }
 
   handleChange(event) {
     this.setState({ search_words: event.target.value });
-    if (event.target.value === "") {
-      this.props.update(
+    if (
+      this.props.items_org !== null &&
+      this.props.items_org !== undefined &&
+      event.target.value === ""
+    ) {
+      var new_items = this.filterItems(
+        this.props.items_org,
         event.target.value,
         this.state.show_val,
         this.state.sort_val
       );
+
+      this.props.updateItems(new_items);
     }
   }
+
   handleSubmit(event) {
-    this.props.update(
-      this.state.search_words,
-      this.state.show_val,
-      this.state.sort_val
-    );
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      var new_items = this.filterItems(
+        this.props.items_org,
+        this.state.search_words,
+        this.state.show_val,
+        this.state.sort_val
+      );
+      this.props.updateItems(new_items);
+    }
   }
   handleUpdate(event) {
-    this.props.updateMatches(
-      this.state.search_words,
-      this.state.show_val,
-      this.state.sort_val
-    );
+    if (this.props.items_org !== null && this.props.items_org !== undefined) {
+      this.props.updateLiveMatches();
+    }
   }
 
   render() {

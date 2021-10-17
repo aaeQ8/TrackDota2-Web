@@ -8,9 +8,6 @@ export default class LiveMatchesList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { items: null, items_org: null };
-    this.sortItems = this.sortItems.bind(this);
-    this.searchItems = this.searchItems.bind(this);
-    this.showItems = this.showItems.bind(this);
   }
 
   componentDidMount() {
@@ -26,14 +23,13 @@ export default class LiveMatchesList extends React.Component {
       });
   }
 
-  updateLiveMatches(search_words, show_val, sort_val) {
+  updateLiveMatches() {
     fetch("https://api.opendota.com/api/live")
       .then((response) => response.json())
       .then((data) => {
         this.setState({ items: [...data] });
         this.setState({ items_org: [...data] });
-      })
-      .then(() => this.update(search_words, show_val, sort_val));
+      });
   }
 
   renderMatchItems() {
@@ -51,67 +47,6 @@ export default class LiveMatchesList extends React.Component {
     }
   }
 
-  searchItems(search_words, show_val, sort_val) {
-    if (this.state.items_org !== null) {
-      if (search_words === "") {
-        this.setState({ items: this.state.items_org }, () =>
-          this.showItems(show_val, sort_val)
-        );
-      } else {
-        var searched_items = [];
-        this.state.items_org.forEach((element) => {
-          element.players.forEach((player) => {
-            if ("name" in player)
-              if (
-                player.name.toLowerCase().startsWith(search_words.toLowerCase())
-              ) {
-                searched_items.push(element);
-              }
-          });
-        });
-        this.setState({ items: [...searched_items] }, () =>
-          this.showItems(show_val, sort_val)
-        );
-      }
-    }
-  }
-
-  sortItems(sort_val) {
-    function mycomparator(a, b) {
-      return a[sort_val] < b[sort_val] ? 1 : -1;
-    }
-
-    if (this.state.items !== null) {
-      this.setState({ items: [...this.state.items].sort(mycomparator) });
-    }
-  }
-
-  showItems(show_val, sort_val) {
-    if (this.state.items_org !== null) {
-      var items_to_show = [];
-      if (show_val === "all") {
-        items_to_show = [...this.state.items];
-      } else if (show_val === "live") {
-        this.state.items.forEach((element) => {
-          if (element.deactivate_time === 0) items_to_show.push(element);
-        });
-      } else if (show_val === "complete") {
-        this.state.items.forEach((element) => {
-          if (element.deactivate_time !== 0) items_to_show.push(element);
-        });
-      }
-      this.setState({ items: [...items_to_show] }, () => {
-        this.sortItems(sort_val);
-      });
-    }
-  }
-  update(search_words, show_val, sort_val) {
-    this.searchItems(search_words, show_val, sort_val);
-  }
-  updateMatches(search_words, show_val, sort_val) {
-    this.updateLiveMatches(search_words, show_val, sort_val);
-  }
-
   render() {
     return (
       <div className="bg-dark container-fluid">
@@ -119,8 +54,9 @@ export default class LiveMatchesList extends React.Component {
           <h1 style={{ color: "orange" }}> Live</h1>
           <hr />
           <FilterBarLive
-            updateMatches={this.updateMatches.bind(this)}
-            update={this.update.bind(this)}
+            items_org={this.state.items_org}
+            updateItems={(new_items) => this.setState({'items': new_items})}
+            updateLiveMatches={this.updateLiveMatches.bind(this)}
           />
           <hr />
           {this.renderMatchItems()}
