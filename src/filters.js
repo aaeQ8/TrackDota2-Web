@@ -58,7 +58,6 @@ export class FilterBar extends React.Component {
         this.state.search_words,
         this.state.sort_val
       );
-      console.log(new_items);
       var fetch_more;
       if (this.state.search_words === "") fetch_more = true;
       else fetch_more = false;
@@ -151,7 +150,6 @@ export class FilterBarLive extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("called", this.props.items_org);
     if (
       this.props.items_org !== null &&
       this.props.items_org !== undefined &&

@@ -25,7 +25,7 @@ class TopNavBar extends React.Component {
       <Router forceRefresh={true}>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <Link className="navbar-brand" to="/">
-            trackdota2
+            <span style={{'color': '  #ffd700'}}>TrackDota2</span>
           </Link>
           <button
             className="navbar-toggler"
