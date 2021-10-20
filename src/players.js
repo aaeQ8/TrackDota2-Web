@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Matches } from "./matches.js";
+import { PlayerMatches } from "./matches.js";
 
 export default class PlayersList extends React.Component {
   constructor(props) {
@@ -31,9 +31,7 @@ export default class PlayersList extends React.Component {
             key={this.state.players_list[i]["player_id"]}
             path={"/players/" + this.state.players_list[i]["player_id"]}
           >
-            <Matches
-              header={this.state.players_list[i]["player_name"]}
-              matches_to_fetch="player"
+            <PlayerMatches
               player_name={this.state.players_list[i]["player_name"]}
               player_id={this.state.players_list[i]["player_id"]}
             />

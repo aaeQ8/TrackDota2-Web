@@ -4,30 +4,6 @@
   height: 25px;
 }
 
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-}
-
-.game-info {
-  margin-left: 20px;
-}
-
-#rad-heading {
-  float: left;
-}
-
-#dire-heading {
-  float: right;
-}
-
-#team-headings {
-  clear: both;
-}
 .match-box {
   border: 1px solid #bbb;
 }
@@ -47,6 +23,14 @@
 
 .duration-preview {
   font: "calibre";
+}
+.highlight-player {
+  textdecoration: none;
+  color: cyan;
+}
+
+.highlight-player:hover{
+  color: cyan;
 }
 
 .mmr-spec {
