@@ -429,7 +429,7 @@ class StatsPortrait extends React.Component {
           {this.props.rad_score} - {this.props.dire_score}
         </h5>
         <h5 className="duration-preview">{this.props.duration}</h5>
-        <h6 className="duration-preview"> {this.props.average_mmr} MMR</h6>
+        <h6 className="duration-preview"> {this.props.avg_mmr} MMR</h6>
         <h6 className="duration-preview">{this.props.start_time}</h6>
         <h5 style={{ color: this.props.winnerColor, display: "inline" }}>
           {" "}
