@@ -3,12 +3,17 @@ import React from "react";
 export class FilterBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { search_words: "", sort_val: "activate_time_id" };
+    this.state = {
+      search_words: "",
+      sort_val: "activate_time_id",
+      hidden_details: false,
+    };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleHide = this.handleHide.bind(this);
   }
-  
+
   componentDidUpdate(prevProps) {
     if (
       this.props.items_org !== null &&
@@ -65,6 +70,10 @@ export class FilterBar extends React.Component {
     }
   }
 
+  handleHide(event) {
+    this.props.hide_details();
+  }
+
   _search(search_words) {
     var items = [];
     if (search_words === "") {
@@ -101,6 +110,10 @@ export class FilterBar extends React.Component {
   }
 
   render() {
+    var detailsBtnText = "Hide details";
+    if (this.props.hide_details_val === true) {
+      detailsBtnText = "Show details";
+    } 
     return (
       <div className="row">
         <div className="col">
@@ -118,6 +131,13 @@ export class FilterBar extends React.Component {
             Search{" "}
           </button>
         </div>
+        <div className="col-auto">
+          <button onClick={this.handleHide} className="btn btn-secondary">
+            {" "}
+            {detailsBtnText}{" "}
+          </button>
+        </div>
+
         <div className="col-auto">
           <select
             value={this.state.sort_val}

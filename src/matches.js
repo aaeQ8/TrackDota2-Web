@@ -15,8 +15,9 @@ export class RecentMatches extends React.Component {
       items_org: null,
       last_key: null,
       fetch_more: true,
-      max_items: 200,
+      max_items: 100,
       date: null,
+      hide_details: false,
     };
     this.fetchMoreMatches = this.fetchRecentMatches.bind(this);
   }
@@ -76,6 +77,10 @@ export class RecentMatches extends React.Component {
           <h1 style={{ color: "orange" }}> Recent </h1>
           <hr />
           <FilterBar
+            hide_details={() =>
+              this.setState({ hide_details: !this.state.hide_details })
+            }
+            hide_details_val={this.state.hide_details}
             items_org={this.state.items_org}
             updateItems={(new_items, fetch_more) => {
               this.setState({ fetch_more: fetch_more });
@@ -84,6 +89,8 @@ export class RecentMatches extends React.Component {
           />
           <hr />
           <MatchesList
+            hide_details={this.state.hide_details}
+            highlight_player={this.props.player_id}
             items={this.state.items}
             fetchMoreMatches={this.fetchMoreMatches}
             fetch_more={this.state.fetch_more}
@@ -103,7 +110,8 @@ export class LinkedMatches extends React.Component {
       items_org: null,
       last_key: null,
       fetch_more: true,
-      max_items: 300,
+      max_items: 100,
+      hide_details: false,
     };
     this.fetchMoreMatches = this.fetchMoreLinkedMatches.bind(this);
   }
@@ -174,6 +182,10 @@ export class LinkedMatches extends React.Component {
           <h1 style={{ color: "orange" }}> Linked matches </h1>
           <hr />
           <FilterBar
+            hide_details={() =>
+              this.setState({ hide_details: !this.state.hide_details })
+            }
+            hide_details_val={this.state.hide_details}
             items_org={this.state.items_org}
             updateItems={(new_items, fetch_more) => {
               this.setState({ fetch_more: fetch_more });
@@ -182,6 +194,8 @@ export class LinkedMatches extends React.Component {
           />
           <hr />
           <MatchesList
+            hide_details={this.state.hide_details}
+            highlight_player={this.props.player_id}
             items={this.state.items}
             fetchMoreMatches={this.fetchMoreMatches}
             fetch_more={this.state.fetch_more}
@@ -201,7 +215,8 @@ export class PlayerMatches extends React.Component {
       items_org: null,
       last_key: null,
       fetch_more: true,
-      max_items: 300,
+      max_items: 100,
+      hide_details: false,
     };
     this.fetchMoreMatches = this.fetchMoreRecentPlayerMatches.bind(this);
   }
@@ -249,7 +264,7 @@ export class PlayerMatches extends React.Component {
                 data["body"]["Responses"]["matches"]
               ),
             });
-            if (this.state.items.length >= 500)
+            if (this.state.items.length >= this.state.max_items)
               this.setState({ fetch_more: false });
           } else {
             this.setState({ items: data["body"]["Responses"]["matches"] });
@@ -271,6 +286,10 @@ export class PlayerMatches extends React.Component {
           <h1 style={{ color: "orange" }}> {this.props.player_name} </h1>
           <hr />
           <FilterBar
+            hide_details={() =>
+              this.setState({ hide_details: !this.state.hide_details })
+            }
+            hide_details_val={this.state.hide_details}
             items_org={this.state.items_org}
             updateItems={(new_items, fetch_more) => {
               this.setState({ fetch_more: fetch_more });
@@ -279,6 +298,7 @@ export class PlayerMatches extends React.Component {
           />
           <hr />
           <MatchesList
+            hide_details={this.state.hide_details}
             highlight_player={this.props.player_id}
             items={this.state.items}
             fetchMoreMatches={this.fetchMoreMatches}
@@ -298,6 +318,7 @@ class MatchesList extends React.Component {
         if (this.props.items[i]["players"].length === 10)
           rows.push(
             <MatchPreviewRow
+              hide_details={this.props.hide_details}
               highlight_player={this.props.highlight_player}
               match_json={this.props.items[i]}
               key={this.props.items[i]["matchid"]}
@@ -333,7 +354,7 @@ class MatchesList extends React.Component {
 
 export class MatchPreviewRow extends React.Component {
   renderHeroIcons(start_index, team) {
-    if (this.props.match_json != null) {
+    if (this.props.match_json !== null && this.props.hide_details === false) {
       var cols = [];
       for (var i = start_index; i < start_index + 5; i++) {
         cols.push(
@@ -353,12 +374,32 @@ export class MatchPreviewRow extends React.Component {
     return (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
   }
 
+  renderPortrait() {
+    if (this.props.hide_details === false && this.props.match_json !== null) {
+      var winnerColor;
+      if (this.props.match_json["winner"] === "radiant")
+        winnerColor = "lightgreen";
+      else winnerColor = "#FF7F7F";
+      var duration = this.fmtMSS(this.props.match_json["duration"]);
+      var start_time = time_ago(
+        new Date(parseInt(this.props.match_json["activate_time"] * 1000))
+      );
+
+      return (
+        <StatsPortrait
+          rad_score={this.props.match_json.rad_score}
+          dire_score={this.props.match_json.dire_score}
+          avg_mmr={this.props.match_json["average_mmr"]}
+          duration={duration}
+          start_time={start_time}
+          winnerColor={winnerColor}
+          winner={this.props.match_json["winner"]}
+        />
+      );
+    }
+  }
+
   render() {
-    var winnerColor;
-    if (this.props.match_json["winner"] === "radiant")
-      winnerColor = "lightgreen";
-    else winnerColor = "#FF7F7F";
-    var result = this.fmtMSS(this.props.match_json["duration"]);
     var m;
     if ("yt_links" in this.props.match_json)
       m = this.props.match_json["yt_links"];
@@ -366,26 +407,7 @@ export class MatchPreviewRow extends React.Component {
     return (
       <div className="live-portrait row">
         {this.renderHeroIcons(0, "RAD")}
-        <div className="text-center col-sm-2">
-          <h5 className="score-preview">
-            {this.props.match_json["rad_score"]} -{" "}
-            {this.props.match_json["dire_score"]}
-          </h5>
-          <h5 className="duration-preview">{result}</h5>
-          <h6 className="duration-preview">
-            {" "}
-            {this.props.match_json["average_mmr"]} MMR
-          </h6>
-          <h6 className="duration-preview">
-            {time_ago(
-              new Date(parseInt(this.props.match_json["activate_time"] * 1000))
-            )}
-          </h6>
-          <h5 style={{ color: winnerColor, display: "inline" }}>
-            {" "}
-            {this.props.match_json["winner"].toUpperCase()} Win{" "}
-          </h5>
-        </div>
+        {this.renderPortrait()}
         {this.renderHeroIcons(5, "DIRE")}
         <div className="row-sm-2 p-0 m-0">
           <PlayerNamesView
@@ -394,6 +416,25 @@ export class MatchPreviewRow extends React.Component {
             players={this.props.match_json["players"]}
           />
         </div>
+      </div>
+    );
+  }
+}
+
+class StatsPortrait extends React.Component {
+  render() {
+    return (
+      <div className="container text-center col-sm-2">
+        <h5 className="score-preview">
+          {this.props.rad_score} - {this.props.dire_score}
+        </h5>
+        <h5 className="duration-preview">{this.props.duration}</h5>
+        <h6 className="duration-preview"> {this.props.average_mmr} MMR</h6>
+        <h6 className="duration-preview">{this.props.start_time}</h6>
+        <h5 style={{ color: this.props.winnerColor, display: "inline" }}>
+          {" "}
+          {this.props.winner.toUpperCase()} Win{" "}
+        </h5>
       </div>
     );
   }
@@ -497,7 +538,10 @@ class PlayerNamesView extends React.Component {
       for (var i = 0; i < this.props.players.length; i++) {
         if (this.props.players[i]["player_details"]["is_pro"] === "1") {
           var highlight = "player-name";
-          if(parseInt(this.props.players[i]["player_details"]["player_id"]) === parseInt(this.props.highlight_player))
+          if (
+            parseInt(this.props.players[i]["player_details"]["player_id"]) ===
+            parseInt(this.props.highlight_player)
+          )
             highlight = "highlight-player";
           names.push(
             <span key={this.props.players[i]["player_details"]["hero_id"]}>
