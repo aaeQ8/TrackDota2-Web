@@ -68,7 +68,7 @@ export class FilterBar extends React.Component {
   _search(search_words) {
     var items = [];
     if (search_words === "") {
-      items = [...this.props.items_org];
+      items = this.props.items_org;
     } else {
       this.props.items_org.forEach((element) => {
         element.players.forEach((player) => {

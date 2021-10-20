@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import LiveMatchesList from "./live.js";
 import PlayersList from "./players.js";
-import { Matches } from "./matches.js";
+import { Matches, RecentMatches } from "./matches.js";
 
 class TopNavBar extends React.Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class TopNavBar extends React.Component {
         </nav>
         <Switch>
           <Route exact path="/recent">
-            <Matches matches_to_fetch="recent" header="Recent" />
+            <RecentMatches />
           </Route>
           <Route path="/linked">
             <Matches matches_to_fetch="linked" header="Linked matches" />

@@ -6,6 +6,134 @@ import { FilterBar } from "./filters.js";
 import { LoadingMatches, NoMoreGames } from "./status.js";
 import "./index.css";
 
+export class RecentMatches extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      zero_games_found: null,
+      items: null,
+      items_org: null,
+      last_key: null,
+      fetch_more: true,
+      max_items: 200,
+      date: null
+    };
+    this.fetchMoreMatches = this.fetchRecentMatches.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchRecentMatches();
+  }
+
+  fetchRecentMatches() {
+    var last_key;
+    var date;
+    if (this.state.last_key === null && this.state.date === null) {
+      last_key = "?=" + new Date().toISOString().split("T")[0];
+    } else if (this.state.last_key !== null) {
+      last_key = "?last_key=" + this.state.last_key;
+    } else {
+      last_key = "?date=" + this.state.date;
+    }
+    fetch(
+      "https://lb6ojeony6.execute-api.ca-central-1.amazonaws.com/prod/recent_matches" +
+        last_key
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (this.state.items !== null) {
+          this.setState({
+            items: this.state.items.concat(data["body"]["Items"]),
+          });
+          this.setState({
+            items_org: this.state.items_org.concat(data["body"]["Items"]),
+          });
+
+          if (this.state.items.length >= this.state.max_items)
+            this.setState({ fetch_more: false });
+        } else {
+          this.setState({ items: data["body"]["Items"] });
+          this.setState({ items_org: data["body"]["Items"] });
+        }
+        if ("LastEvaluatedKey" in data["body"])
+          this.setState({
+            last_key: data["body"]["LastEvaluatedKey"]["activate_time_id"],
+          });
+        else {
+          this.setState({ last_key: null });
+          if (this.state.date === null) date = new Date();
+          else date = new Date(this.state.date);
+          date.setDate(date.getDate() - 1);
+          this.setState({ date: date.toISOString().split("T")[0] });
+        }
+      });
+  }
+
+  render() {
+    return (
+      <div className="bg-dark container-fluid">
+        <div className="container">
+          <h1 style={{ color: "orange" }}> Recent </h1>
+          <hr />
+          <FilterBar
+            items_org={this.state.items_org}
+            updateItems={(new_items, fetch_more) => {
+              this.setState({ fetch_more: fetch_more });
+              this.setState({ items: new_items });
+            }}
+          />
+          <hr />
+          <MatchesList
+            items={this.state.items}
+            fetchMoreMatches={this.fetchMoreMatches}
+            fetch_more={this.state.fetch_more}
+          />
+        </div>
+      </div>
+    );
+  }
+}
+
+class MatchesList extends React.Component {
+  renderMatchItems() {
+    if (this.props.items != null) {
+      var rows = [];
+      for (var i = 0; i < this.props.items.length; i++) {
+        if (this.props.items[i]["players"].length === 10)
+          rows.push(
+            <MatchPreviewRow
+              match_json={this.props.items[i]}
+              key={this.props.items[i]["matchid"]}
+            />
+          );
+      }
+      return rows;
+    }
+  }
+
+  render() {
+    var len;
+    if (this.props.items === null || this.props.items === undefined) len = 0;
+    else len = this.props.items.length;
+    return (
+          <InfiniteScroll
+            className="container"
+            dataLength={len}
+            endMessage={<NoMoreGames />}
+            next={this.props.fetchMoreMatches}
+            hasMore={this.props.fetch_more}
+            loader={
+              <div className="fill" style={{ textAlign: "center" }}>
+                <LoadingMatches />
+              </div>
+            }
+          >
+            {this.renderMatchItems()}
+          </InfiniteScroll>
+    );
+  }
+}
+
 export class Matches extends React.Component {
   constructor(props) {
     super(props);
@@ -352,8 +480,7 @@ class ItemsPreviewList extends React.Component {
             <img
               alt=""
               key={i}
-              style={{maxHeight: " 28px",
-                maxWidth: "28px"}}
+              style={{ maxHeight: " 28px", maxWidth: "28px" }}
               className="d-none d-xl-block img-fluid p-0 m-0"
               src={
                 "https://d2zromn1qdgyf0.cloudfront.net/items_icons/" +
