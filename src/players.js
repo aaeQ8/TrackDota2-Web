@@ -109,6 +109,14 @@ class PlayerItem extends React.Component {
   }
 
   render() {
+    var link = <span> No link found </span>;
+    if (this.props.twitch !== "none")
+      link = (
+        <a style={{ textDecoration: "none" }} href={this.props.twitch}>
+          {" "}
+          <span style={{ color: "cyan" }}> {this.props.twitch} </span>{" "}
+        </a>
+      );
     return (
       <tr>
         <td>
@@ -121,10 +129,7 @@ class PlayerItem extends React.Component {
           </Link>
         </td>
         <td> {this.renderSigHeroes()} </td>
-        <td>
-          {" "}
-          <span> {this.props.twitch}</span>{" "}
-        </td>
+        <td>{link}</td>
       </tr>
     );
   }
