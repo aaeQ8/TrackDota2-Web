@@ -1,4 +1,7 @@
-# Getting Started with Create React App
+# A web app for tracking dota 2 pro players.
+Hosted [here](https://trackdota2.com).
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
