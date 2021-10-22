@@ -25,7 +25,7 @@ class TopNavBar extends React.Component {
       <Router forceRefresh={true}>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <Link className="navbar-brand" to="/">
-            <span style={{'color': '  #ffd700'}}>TrackDota2</span>
+            <span style={{ color: "  #ffd700" }}>TrackDota2</span>
           </Link>
           <button
             className="navbar-toggler"
@@ -58,6 +58,9 @@ class TopNavBar extends React.Component {
               <Link className="nav-item nav-link active" to="/linked">
                 Linked matches
               </Link>
+              <a className="nav-item nav-link active" href="https://github.com/aaeQ8" target="_blank">
+                Source code
+              </a>
             </div>
           </div>
         </nav>
@@ -73,6 +76,9 @@ class TopNavBar extends React.Component {
           </Route>
           <Route path="/live">
             <LiveMatchesList />
+          </Route>
+          <Route path="/source">
+            <SourceCodePage />
           </Route>
           <Route path="/">
             <MainView />
@@ -94,27 +100,39 @@ class MainApp extends React.Component {
   }
 }
 
+class SourceCodePage extends React.Component {
+  render() {
+    return (
+      <div className="container">
+        <p className="container" style={{ color: "white" }}>
+          <a href="https://github.com/aaeQ8"> Github </a>
+        </p>
+      </div>
+    );
+  }
+}
+
 class MainView extends React.Component {
   render() {
     return (
       <div className="container">
         <hr />
         <p className="container" style={{ color: "white" }}>
-          <span style={{ color: "orange" }}>Live</span> - This fetches
-          Live matches from opendota and very recently completed games but some
-          games are misclassifed as live due to a bug
+          <span style={{ color: "orange" }}>Live</span> - This fetches Live
+          matches from opendota and very recently completed games but some games
+          are misclassifed as live due to a bug
         </p>
         <p className="container" style={{ color: "white" }}>
           <span style={{ color: "orange" }}>Recent</span> - This fetches
           recently completed and processed matches
         </p>
         <p className="container" style={{ color: "white" }}>
-          <span style={{ color: "orange" }}>Players</span> - This is
-          a list of players being tracked (pro players in general)
+          <span style={{ color: "orange" }}>Players</span> - This is a list of
+          players being tracked (pro players in general)
         </p>
         <p className="container" style={{ color: "white" }}>
-          <span style={{ color: "orange" }}>Linked matches</span> - This is
-          a list of matches that were found on youtube
+          <span style={{ color: "orange" }}>Linked matches</span> - This is a
+          list of matches that were found on youtube
         </p>
       </div>
     );
