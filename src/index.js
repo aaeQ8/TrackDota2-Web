@@ -58,7 +58,7 @@ class TopNavBar extends React.Component {
               <Link className="nav-item nav-link active" to="/linked">
                 Linked matches
               </Link>
-              <a className="nav-item nav-link active" href="https://github.com/aaeQ8" target="_blank">
+              <a className="nav-item nav-link active" rel="noreferrer" href="https://github.com/aaeQ8" target="_blank">
                 Source code
               </a>
             </div>

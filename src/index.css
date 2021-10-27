@@ -33,6 +33,15 @@
   color: cyan;
 }
 
+.cyan-link {
+  text-decoration: none;
+  color: white;
+  
+}
+
+.cyan-link:hover{
+  color: cyan;
+}
 .mmr-spec {
   display: block;
   float: right;

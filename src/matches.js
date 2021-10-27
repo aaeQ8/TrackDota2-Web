@@ -394,6 +394,7 @@ export class MatchPreviewRow extends React.Component {
           start_time={start_time}
           winnerColor={winnerColor}
           winner={this.props.match_json["winner"]}
+          match_id={this.props.match_json["matchid"]}
         />
       );
     }
@@ -431,6 +432,16 @@ class StatsPortrait extends React.Component {
         <h5 className="duration-preview">{this.props.duration}</h5>
         <h6 className="duration-preview"> {this.props.avg_mmr} MMR</h6>
         <h6 className="duration-preview">{this.props.start_time}</h6>
+        <h6>
+          <a
+            rel="noreferrer"
+            href={"https://opendota.com/matches/" + this.props.match_id}
+            target="_blank"
+            className="cyan-link"
+          >
+            {this.props.match_id}
+          </a>{" "}
+        </h6>
         <h5 style={{ color: this.props.winnerColor, display: "inline" }}>
           {" "}
           {this.props.winner.toUpperCase()} Win{" "}
