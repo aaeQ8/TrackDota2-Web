@@ -58,9 +58,9 @@ class TopNavBar extends React.Component {
               <Link className="nav-item nav-link active" to="/linked">
                 Linked matches
               </Link>
-              <a className="nav-item nav-link active" rel="noreferrer" href="https://github.com/aaeQ8" target="_blank">
-                Source code
-              </a>
+              <Link className="nav-item nav-link active" to="/about">
+                About
+              </Link>
             </div>
           </div>
         </nav>
@@ -77,8 +77,8 @@ class TopNavBar extends React.Component {
           <Route path="/live">
             <LiveMatchesList />
           </Route>
-          <Route path="/source">
-            <SourceCodePage />
+          <Route path="/about">
+            <AboutPage />
           </Route>
           <Route path="/">
             <MainView />
@@ -100,12 +100,39 @@ class MainApp extends React.Component {
   }
 }
 
-class SourceCodePage extends React.Component {
+class AboutPage extends React.Component {
   render() {
     return (
       <div className="container">
+        <hr />
         <p className="container" style={{ color: "white" }}>
-          <a href="https://github.com/aaeQ8"> Github </a>
+          This project/web app was mainly created for fun. <br />
+          The source code is hosted on my{" "}
+          <a
+            className="orange-link"
+            rel="noreferrer"
+            target="_blank"
+            href="https://github.com/aaeQ8"
+          >
+            Github
+          </a>{" "}
+          under MIT license.
+          <br />
+          If you have any suggestions or want to request any feature then simply
+          make a request on Github or contact me:
+          <br />
+          email: aaeQ8i@gmail.com
+          <br />
+          reddit:{" "}
+          <a
+            className="orange-link"
+            rel="noreferrer"
+            target="_blank"
+            href="https://reddit.com/u/aaeQ8"
+          >
+            {" "}
+            u/aaeQ8{" "}
+          </a>
         </p>
       </div>
     );
