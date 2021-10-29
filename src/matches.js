@@ -312,18 +312,19 @@ export class PlayerMatches extends React.Component {
 
 class MatchesList extends React.Component {
   renderMatchItems() {
-    if (this.props.items != null) {
+    if (this.props.items !== null && this.props.items !== undefined) {
       var rows = [];
       for (var i = 0; i < this.props.items.length; i++) {
-        if (this.props.items[i]["players"].length === 10)
-          rows.push(
-            <MatchPreviewRow
-              hide_details={this.props.hide_details}
-              highlight_player={this.props.highlight_player}
-              match_json={this.props.items[i]}
-              key={this.props.items[i]["matchid"]}
-            />
-          );
+        if ("players" in this.props.items[i])
+          if (this.props.items[i]["players"].length === 10)
+            rows.push(
+              <MatchPreviewRow
+                hide_details={this.props.hide_details}
+                highlight_player={this.props.highlight_player}
+                match_json={this.props.items[i]}
+                key={this.props.items[i]["matchid"]}
+              />
+            );
       }
       return rows;
     }
