@@ -80,15 +80,16 @@ export class FilterBar extends React.Component {
       items = this.props.items_org;
     } else {
       this.props.items_org.forEach((element) => {
-        element.players.forEach((player) => {
-          if (
-            player.player_details.player_name
-              .toLowerCase()
-              .startsWith(search_words.toLowerCase())
-          ) {
-            items.push(element);
-          }
-        });
+        if ("players" in element)
+          element.players.forEach((player) => {
+            if (
+              player.player_details.player_name
+                .toLowerCase()
+                .startsWith(search_words.toLowerCase())
+            ) {
+              items.push(element);
+            }
+          });
       });
     }
     return items;
@@ -113,7 +114,7 @@ export class FilterBar extends React.Component {
     var detailsBtnText = "Hide details";
     if (this.props.hide_details_val === true) {
       detailsBtnText = "Show details";
-    } 
+    }
     return (
       <div className="row">
         <div className="col">
